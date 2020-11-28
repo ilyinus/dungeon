@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import ru.geekbrains.dungeon.helpers.Poolable;
 
 @Data
@@ -25,9 +23,12 @@ public abstract class Unit implements Poolable {
     float movementTime;
     float movementMaxTime;
     int targetX, targetY;
-    int turns, maxTurns;
+    int turns;
+    int attack;
     float innerTimer;
     StringBuilder stringHelper;
+    int maxTurns;
+    int maxAttack;
 
     public Unit(GameController gc, int cellX, int cellY, int hpMax) {
         this.gc = gc;
@@ -39,12 +40,13 @@ public abstract class Unit implements Poolable {
         this.targetY = cellY;
         this.damage = 2;
         this.defence = 0;
-        this.maxTurns = GameController.TURNS_COUNT;
         this.movementMaxTime = 0.2f;
         this.attackRange = 2;
         this.innerTimer = MathUtils.random(1000.0f);
         this.stringHelper = new StringBuilder();
         this.gold = MathUtils.random(1, 5);
+        this.maxTurns = MathUtils.random(3) + 1;
+        this.maxAttack = MathUtils.random(3) + 1;
     }
 
     public void addGold(int amount) {
@@ -60,6 +62,7 @@ public abstract class Unit implements Poolable {
 
     public void startTurn() {
         turns = maxTurns;
+        attack = maxAttack;
     }
 
     public void startRound() {
@@ -99,14 +102,14 @@ public abstract class Unit implements Poolable {
     }
 
     public boolean canIAttackThisTarget(Unit target) {
-        return cellX - target.getCellX() == 0 && Math.abs(cellY - target.getCellY()) <= attackRange ||
-                cellY - target.getCellY() == 0 && Math.abs(cellX - target.getCellX()) <= attackRange;
+        return attack > 0 && (cellX - target.getCellX() == 0 && Math.abs(cellY - target.getCellY()) <= attackRange ||
+                cellY - target.getCellY() == 0 && Math.abs(cellX - target.getCellX()) <= attackRange);
     }
 
     public void attack(Unit target) {
         target.takeDamage(this, BattleCalc.attack(this, target));
         this.takeDamage(target, BattleCalc.checkCounterAttack(this, target));
-        turns--;
+        attack--;
     }
 
     public void update(float dt) {
@@ -149,6 +152,10 @@ public abstract class Unit implements Poolable {
         font18.draw(batch, stringHelper, barX, barY + 64, 60, 1, false);
 
         font18.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        stringHelper.setLength(0);
+        stringHelper.append("S").append(turns).append(", A").append(attack);
+        font18.draw(batch, stringHelper, barX, barY + 80, 60, 1, false);
+
         batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
