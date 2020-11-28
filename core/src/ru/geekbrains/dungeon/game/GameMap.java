@@ -30,6 +30,7 @@ public class GameMap {
     public static final int CELLS_X = 22;
     public static final int CELLS_Y = 12;
     public static final int CELL_SIZE = 60;
+    public static final int FOREST_PERCENTAGE = 5;
 
     public int getCellsX() {
         return CELLS_X;
@@ -50,7 +51,8 @@ public class GameMap {
                 this.data[i][j] = new Cell();
             }
         }
-        for (int i = 0; i < 5; i++) {
+        int treesCount = (int)((CELLS_X * CELLS_Y * FOREST_PERCENTAGE) / 100.0f);
+        for (int i = 0; i < treesCount; i++) {
             this.data[MathUtils.random(0, CELLS_X - 1)][MathUtils.random(0, CELLS_Y - 1)].changeType(CellType.TREE);
 
         }
