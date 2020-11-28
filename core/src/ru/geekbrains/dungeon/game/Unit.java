@@ -39,6 +39,18 @@ public abstract class Unit implements Poolable {
         return cellY;
     }
 
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public int getHpMax() {
+        return hpMax;
+    }
+
     public Unit(GameController gc, int cellX, int cellY, int hpMax) {
         this.gc = gc;
         this.hpMax = hpMax;
@@ -124,12 +136,13 @@ public abstract class Unit implements Poolable {
         batch.draw(texture, px, py);
         batch.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+        float alpha = hp == hpMax ? 0.2f : 1.0f;
 
         float barX = px, barY = py + MathUtils.sin(innerTimer * 5.0f) * 2;
         batch.draw(textureHp, barX + 1, barY + 51, 58, 10);
-        batch.setColor(0.7f, 0.0f, 0.0f, 1.0f);
+        batch.setColor(0.7f, 0.0f, 0.0f, alpha);
         batch.draw(textureHp, barX + 2, barY + 52, 56, 8);
-        batch.setColor(0.0f, 1.0f, 0.0f, 1.0f);
+        batch.setColor(0.0f, 1.0f, 0.0f, alpha);
         batch.draw(textureHp, barX + 2, barY + 52, (float) hp / hpMax * 56, 8);
         batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         font18.draw(batch, "" + hp, barX, barY + 64, 60, 1, false);
