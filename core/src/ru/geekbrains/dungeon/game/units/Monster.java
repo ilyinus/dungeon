@@ -1,6 +1,7 @@
-package ru.geekbrains.dungeon.game;
+package ru.geekbrains.dungeon.game.units;
 
 import com.badlogic.gdx.math.MathUtils;
+import ru.geekbrains.dungeon.game.Weapon;
 import ru.geekbrains.dungeon.helpers.Assets;
 import ru.geekbrains.dungeon.game.GameController;
 import ru.geekbrains.dungeon.helpers.Utils;
@@ -10,10 +11,10 @@ public class Monster extends Unit {
     private Unit target;
 
     public Monster(GameController gc) {
-        super(gc, 5, 2, 10);
-        this.texture = Assets.getInstance().getAtlas().findRegion("monster");
+        super(gc, 5, 2, 10, "Bomber");
         this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
-        this.hp = -1;
+        this.stats.hp = -1;
+        this.weapon = new Weapon(Weapon.Type.SWORD, 2, 1);
     }
 
     public Monster activate(int cellX, int cellY) {
@@ -21,8 +22,8 @@ public class Monster extends Unit {
         this.cellY = cellY;
         this.targetX = cellX;
         this.targetY = cellY;
-        this.hpMax = 10;
-        this.hp = hpMax;
+        this.stats.maxHp = 10;
+        this.stats.fullRestoreHp();
         this.target = gc.getUnitController().getHero();
         return this;
     }
@@ -41,12 +42,18 @@ public class Monster extends Unit {
     }
 
     public void think(float dt) {
-        if (canIAttackThisTarget(target)) {
+        if (canIAttackThisTarget(target, 1)) {
             attack(target);
+            if (stats.attackPoints == 0) {
+                stats.resetPoints();
+            }
             return;
         }
+        if (stats.movePoints == 0) {
+            stats.resetPoints();
+        }
         if (amIBlocked()) {
-            turns = 0;
+            stats.resetPoints();
             return;
         }
         if (Utils.getCellsIntDistance(cellX, cellY, target.getCellX(), target.getCellY()) < 5) {
