@@ -5,7 +5,17 @@ import lombok.Data;
 @Data
 public class Weapon {
     public enum Type {
-        SPEAR, SWORD, MACE, AXE, BOW
+        SPEAR("Spear"), SWORD("Sword"), MACE("Mace"), AXE("Axe"), BOW("Bow");
+
+        private String name;
+
+        Type(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
     Type type;

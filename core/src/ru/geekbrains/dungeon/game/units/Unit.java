@@ -119,7 +119,9 @@ public abstract class Unit implements Poolable {
     }
 
     public void goTo(int argCellX, int argCellY) {
-        if (!gc.getGameMap().isCellPassable(argCellX, argCellY) || !gc.getUnitController().isCellFree(argCellX, argCellY)) {
+        if (!gc.getGameMap().isCellPassable(argCellX, argCellY) || !gc.getUnitController().isCellFree(argCellX, argCellY) ||
+                // Не могу ходить в клетку в том числе, если стоимость перехода больше чем очков у героя
+                gc.getGameMap().getCellCoast(argCellX, argCellY) > stats.movePoints) {
             return;
         }
         if (stats.movePoints > 0 && Math.abs(argCellX - cellX) + Math.abs(argCellY - cellY) == 1) {
@@ -152,7 +154,8 @@ public abstract class Unit implements Poolable {
                 movementTime = 0;
                 cellX = targetX;
                 cellY = targetY;
-                stats.movePoints--;
+                // Вычитаем стоимоть клетки
+                stats.movePoints = Math.max(0, stats.movePoints - gc.getGameMap().getCellCoast(cellX, cellY));
                 gc.getGameMap().checkAndTakeDrop(this);
             }
         }
@@ -192,6 +195,14 @@ public abstract class Unit implements Poolable {
             font18.draw(batch, stringHelper, barX, barY + 80, 60, 1, false);
         }
         batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+        // При наведнии покажем информацию по оружию
+        if (cellX == gc.getCursorX() && cellY == gc.getCursorY()) {
+            stringHelper.setLength(0);
+            stringHelper.append("W: ").append(weapon.getType().getName()).append(", damage - ").append(weapon.getDamage());
+            font18.draw(batch, stringHelper, barX, barY + 100, 60, 1, false);
+        }
+
     }
 
 
