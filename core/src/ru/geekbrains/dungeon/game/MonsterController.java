@@ -2,6 +2,7 @@ package ru.geekbrains.dungeon.game;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import ru.geekbrains.dungeon.game.units.Monster;
 import ru.geekbrains.dungeon.helpers.ObjectPool;
 
 public class MonsterController extends ObjectPool<Monster> {

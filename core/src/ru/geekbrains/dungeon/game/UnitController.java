@@ -4,7 +4,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import lombok.Data;
-import ru.geekbrains.dungeon.screens.ScreenManager;
+import ru.geekbrains.dungeon.game.units.Hero;
+import ru.geekbrains.dungeon.game.units.Monster;
+import ru.geekbrains.dungeon.game.units.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +46,7 @@ public class UnitController {
         for (int i = 0; i < monsterCount; i++) {
             this.createMonsterInRandomCell();
         }
+        this.createMonster(3, 1);
         this.index = -1;
         this.nextTurn();
     }
@@ -73,7 +76,7 @@ public class UnitController {
         hero.update(dt);
         monsterController.update(dt);
 
-        if (!currentUnit.isActive() || currentUnit.getTurns() == 0) {
+        if (!currentUnit.isActive() || !currentUnit.getStats().doIHaveAnyPoints()) {
             nextTurn();
         }
     }
