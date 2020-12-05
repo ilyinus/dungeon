@@ -1,10 +1,14 @@
 package ru.geekbrains.dungeon.game;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import ru.geekbrains.dungeon.game.units.Unit;
 import ru.geekbrains.dungeon.helpers.Assets;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameMap {
     public enum CellType {
@@ -23,6 +27,8 @@ public class GameMap {
 
         int index;
 
+        int berries;
+
         public Cell() {
             type = CellType.GRASS;
             dropType = DropType.NONE;
@@ -34,6 +40,10 @@ public class GameMap {
             if (type == CellType.TREE) {
                 index = MathUtils.random(4);
             }
+        }
+
+        public void addBerry() {
+            berries++;
         }
     }
 
@@ -54,6 +64,9 @@ public class GameMap {
     private TextureRegion grassTexture;
     private TextureRegion goldTexture;
     private TextureRegion[] treesTextures;
+    private List<int[]> indexesTrees = new ArrayList<>();
+    private TextureRegion berryTexture;
+    private BitmapFont font24 = Assets.getInstance().getAssetManager().get("fonts/font18.ttf");
 
     public GameMap() {
         this.data = new Cell[CELLS_X][CELLS_Y];
@@ -64,13 +77,16 @@ public class GameMap {
         }
         int treesCount = (int) ((CELLS_X * CELLS_Y * FOREST_PERCENTAGE) / 100.0f);
         for (int i = 0; i < treesCount; i++) {
-            this.data[MathUtils.random(0, CELLS_X - 1)][MathUtils.random(0, CELLS_Y - 1)].changeType(CellType.TREE);
-
+            int x = MathUtils.random(0, CELLS_X - 1);
+            int y = MathUtils.random(0, CELLS_Y - 1);
+            this.data[x][y].changeType(CellType.TREE);
+            indexesTrees.add(new int[]{x, y});
         }
 
         this.grassTexture = Assets.getInstance().getAtlas().findRegion("grass");
         this.goldTexture = Assets.getInstance().getAtlas().findRegion("chest").split(60, 60)[0][0];
         this.treesTextures = Assets.getInstance().getAtlas().findRegion("trees").split(60, 90)[0];
+        this.berryTexture = Assets.getInstance().getAtlas().findRegion("projectile");
     }
 
     public boolean isCellPassable(int cx, int cy) {
@@ -96,6 +112,10 @@ public class GameMap {
             for (int j = CELLS_Y - 1; j >= 0; j--) {
                 if (data[i][j].type == CellType.TREE) {
                     batch.draw(treesTextures[data[i][j].index], i * CELL_SIZE, j * CELL_SIZE);
+                    if (data[i][j].berries > 0) {
+                        batch.draw(berryTexture, i * CELL_SIZE + CELL_SIZE, j * CELL_SIZE + CELL_SIZE, 16, 16, 16, 16, 2, 2, 0, false);
+                        font24.draw(batch, "" + data[i][j].berries, i * CELL_SIZE + CELL_SIZE, j * CELL_SIZE + CELL_SIZE + 35);
+                    }
                 }
                 if (data[i][j].dropType == DropType.GOLD) {
                     batch.draw(goldTexture, i * CELL_SIZE, j * CELL_SIZE);
@@ -132,4 +152,22 @@ public class GameMap {
         currentCell.dropType = DropType.NONE;
         currentCell.dropPower = 0;
     }
+
+    public void addBerryRandomTree() {
+        int randomIndex = MathUtils.random(0, indexesTrees.size() - 1);
+        int[] array = indexesTrees.get(randomIndex);
+        data[array[0]][array[1]].addBerry();
+    }
+
+    public int getBerries(int cellX, int cellY) {
+        int result = 0;
+
+        if (data[cellX][cellY].type == CellType.TREE && data[cellX][cellY].berries > 0) {
+            result = data[cellX][cellY].berries;
+            data[cellX][cellY].berries = 0;
+        }
+
+        return result;
+    }
+
 }

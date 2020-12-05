@@ -21,6 +21,7 @@ public class Hero extends Unit {
     private Group guiGroup;
     private Label hpLabel;
     private Label goldLabel;
+    private int satiety;
 
     public Hero(GameController gc) {
         super(gc, 1, 1, 10, "Hero");
@@ -28,12 +29,26 @@ public class Hero extends Unit {
         this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
         this.weapon = new Weapon(Weapon.Type.SPEAR, 2, 2, 0);
         this.createGui();
+        this.satiety = 20;
+    }
+
+    public void reduceSatiety() {
+        if (satiety > 0) {
+            satiety--;
+        } else {
+            stats.hp--;
+            if  (stats.hp == 0)
+                gc.endGame();
+        }
     }
 
     public void update(float dt) {
         super.update(dt);
         if (Gdx.input.justTouched() && canIMakeAction()) {
             Monster m = gc.getUnitController().getMonsterController().getMonsterInCell(gc.getCursorX(), gc.getCursorY());
+
+            satiety = satiety + gc.tryToEatBerries(gc.getCursorX(), gc.getCursorY());
+
             if (m != null && canIAttackThisTarget(m, 1)) {
                 attack(m);
             } else {
@@ -54,7 +69,7 @@ public class Hero extends Unit {
 
     public void updateGui() {
         stringHelper.setLength(0);
-        stringHelper.append(stats.hp).append(" / ").append(stats.maxHp);
+        stringHelper.append(stats.hp).append(" / ").append(stats.maxHp).append(" / ").append(satiety);
         hpLabel.setText(stringHelper);
 
         stringHelper.setLength(0);

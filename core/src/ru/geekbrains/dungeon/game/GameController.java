@@ -74,6 +74,7 @@ public class GameController {
         if (round % 3 == 0) {
             unitController.createMonsterInRandomCell();
         }
+        gameMap.addBerryRandomTree();
     }
 
     public boolean isCellEmpty(int cx, int cy) {
@@ -154,4 +155,14 @@ public class GameController {
         stage.addActor(menuGroup);
         skin.dispose();
     }
+
+    public int tryToEatBerries(int argX, int argY) {
+        return gameMap.getBerries(argX, argY);
+    }
+
+    public void endGame() {
+        ScreenManager currentScreen = ScreenManager.getInstance();
+        currentScreen.changeScreen(ScreenManager.ScreenType.MENU);
+    }
+
 }
