@@ -5,26 +5,18 @@ import lombok.Data;
 @Data
 public class Weapon {
     public enum Type {
-        SPEAR("Spear"), SWORD("Sword"), MACE("Mace"), AXE("Axe"), BOW("Bow");
-
-        private String name;
-
-        Type(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
+        SPEAR, SWORD, MACE, AXE, BOW
     }
 
     Type type;
     int damage;
     int radius;
+    int fxIndex;
 
-    public Weapon(Type type, int damage, int radius) {
+    public Weapon(Type type, int damage, int radius, int fxIndex) {
         this.type = type;
         this.damage = damage;
         this.radius = radius;
+        this.fxIndex = fxIndex;
     }
 }

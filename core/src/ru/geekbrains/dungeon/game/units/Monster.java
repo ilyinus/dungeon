@@ -14,7 +14,7 @@ public class Monster extends Unit {
         super(gc, 5, 2, 10, "Bomber");
         this.textureHp = Assets.getInstance().getAtlas().findRegion("hp");
         this.stats.hp = -1;
-        this.weapon = new Weapon(Weapon.Type.SWORD, 2, 1);
+        this.weapon = new Weapon(Weapon.Type.SWORD, 2, 1, 1);
     }
 
     public Monster activate(int cellX, int cellY) {

@@ -3,66 +3,87 @@ images1.png
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-Hero
+upperPanel
   rotate: false
   xy: 2, 2
+  size: 1280, 60
+  orig: 1280, 60
+  offset: 0, 0
+  index: -1
+Hero
+  rotate: false
+  xy: 2, 64
   size: 480, 240
   orig: 480, 240
   offset: 0, 0
   index: -1
 Bomber
   rotate: false
-  xy: 2, 244
+  xy: 484, 64
   size: 480, 240
   orig: 480, 240
   offset: 0, 0
   index: -1
-trees
+fxs
   rotate: false
-  xy: 2, 486
-  size: 300, 90
-  orig: 300, 90
+  xy: 1284, 2
+  size: 360, 240
+  orig: 360, 240
   offset: 0, 0
   index: -1
 simpleButton
   rotate: false
-  xy: 2, 578
+  xy: 2, 306
   size: 320, 80
   orig: 320, 80
   offset: 0, 0
   index: -1
+trees
+  rotate: false
+  xy: 2, 388
+  size: 300, 90
+  orig: 300, 90
+  offset: 0, 0
+  index: -1
 chest
   rotate: false
-  xy: 304, 486
+  xy: 324, 306
   size: 120, 60
   orig: 120, 60
   offset: 0, 0
   index: -1
+smButton
+  rotate: false
+  xy: 324, 368
+  size: 120, 32
+  orig: 120, 32
+  offset: 0, 0
+  index: -1
 grass
   rotate: false
-  xy: 426, 486
+  xy: 324, 402
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: -1
 cursor
   rotate: false
-  xy: 324, 578
+  xy: 386, 402
   size: 60, 60
   orig: 60, 60
   offset: 0, 0
   index: -1
-projectile
-  rotate: false
-  xy: 484, 2
-  size: 16, 16
-  orig: 16, 16
-  offset: 0, 0
-  index: -1
 hp
   rotate: false
-  xy: 304, 548
+  xy: 2, 480
   size: 60, 8
   orig: 60, 8
+  offset: 0, 0
+  index: -1
+projectile
+  rotate: false
+  xy: 304, 388
+  size: 16, 16
+  orig: 16, 16
   offset: 0, 0
   index: -1
