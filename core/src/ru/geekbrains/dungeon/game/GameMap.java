@@ -23,16 +23,25 @@ public class GameMap {
 
         int index;
 
+        // Добавляем клетке стоимоть
+        int coast;
+
         public Cell() {
             type = CellType.GRASS;
             dropType = DropType.NONE;
             index = 0;
+            // Случайным образом генерим стоимость
+            coast = MathUtils.random(1, 2);
         }
 
         public void changeType(CellType to) {
             type = to;
             if (type == CellType.TREE) {
                 index = MathUtils.random(4);
+            }
+            // Если не трава, то стоиость всегда 1
+            if (type != CellType.GRASS) {
+                coast = 1;
             }
         }
     }
@@ -48,6 +57,11 @@ public class GameMap {
 
     public int getCellsY() {
         return CELLS_Y;
+    }
+
+    // Возвращаем стоимость клетки
+    public int getCellCoast(int cellX, int cellY) {
+        return data[cellX][cellY].coast;
     }
 
     private Cell[][] data;
@@ -86,6 +100,9 @@ public class GameMap {
     public void render(SpriteBatch batch) {
         for (int i = 0; i < CELLS_X; i++) {
             for (int j = CELLS_Y - 1; j >= 0; j--) {
+                // Затемним клетку с большей стоимостью
+                float color = 1.0f - data[i][j].coast * 0.1f;
+                batch.setColor(color, color, color,1.0f);
                 batch.draw(grassTexture, i * CELL_SIZE, j * CELL_SIZE);
                 if (data[i][j].type == CellType.TREE) {
                     batch.draw(treesTextures[data[i][j].index], i * CELL_SIZE, j * CELL_SIZE);
