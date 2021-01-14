@@ -182,6 +182,9 @@ public abstract class Unit implements Poolable {
                 cellX = targetX;
                 cellY = targetY;
                 stats.movePoints--;
+                if (gc.getUnitController().getCurrentUnit() == gc.getUnitController().getHero()) {
+                    gc.getUnitController().getHero().reduceSatiety();
+                }
                 gc.getGameMap().checkAndTakeDrop(this);
             }
         }
